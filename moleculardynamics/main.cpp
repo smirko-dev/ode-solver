@@ -322,7 +322,7 @@ int main(int argc, char** argv)
     if (argc >= 2)
     {
         World world{};
-        if (world.initialize(argv[1]))        
+        if (world.initialize(argv[1]))
         {
             Console console{};
             std::atomic<bool> run(true);
