@@ -14,26 +14,10 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
 ################################################################################
-# ODE Solver
-################################################################################
-
-ADD_LIBRARY(OdeSolver INTERFACE)
-
-TARGET_SOURCES(OdeSolver INTERFACE
-    Vector.h
-    OdeFunction.h
-    OdeSolver.h
-    Euler.h
-    MidPoint.h
-    RungeKutta.h
-    VelocityVerlet.h
-)
-
-TARGET_INCLUDE_DIRECTORIES(OdeSolver INTERFACE ${CMAKE_CURRENT_LIST_DIR})
-
-################################################################################
 # Subdirectories
 ################################################################################
+
+ADD_SUBDIRECTORY(ode)
 
 ADD_SUBDIRECTORY(moleculardynamics)
 ADD_SUBDIRECTORY(planetdynamics)
