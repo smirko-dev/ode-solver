@@ -21,7 +21,7 @@ The ODE solver provides an interface for certain implementation´s.
 
 ### Molecular Dynamics
 
-With the [Lennard Jones Potential](https://en.wikipedia.org/wiki/Lennard-Jones_potential) the movements of melecules in a system can be calculated which is an ODE 2nd order by using the [Velocity Verlet](https://en.wikipedia.org/wiki/Verlet_integration) algorithm.
+With the [Lennard Jones Potential](https://en.wikipedia.org/wiki/Lennard-Jones_potential) the movements of molecules in a system can be calculated which is an ODE 2nd order by using the [Velocity Verlet](https://en.wikipedia.org/wiki/Verlet_integration) algorithm.
 
 ### Planet Dynamics
 
