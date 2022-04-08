@@ -39,7 +39,7 @@ public:
         return Vector(*this);
     }
 
-	Vector operator-() const
+    Vector operator-() const
     {
         Vector result(Base::size());
         for (size_t i{0U}; i < Base::size(); ++i)
@@ -48,7 +48,7 @@ public:
         }
         return result;
     }
-	
+
     Vector operator+(T x) const
     {
         Vector result(Base::size());
@@ -59,7 +59,7 @@ public:
         return result;
     }
 
-	Vector operator-(T x) const
+    Vector operator-(T x) const
     {
         Vector result(Base::size());
         for (size_t i{0U}; i < Base::size(); ++i)
@@ -69,7 +69,7 @@ public:
         return result;
     }
 
-	Vector operator*(T x) const
+    Vector operator*(T x) const
     {
         Vector result(Base::size());
         for (size_t i{0U}; i < Base::size(); ++i)
@@ -79,7 +79,7 @@ public:
         return result;
     }
 
-	Vector operator/(T x) const
+    Vector operator/(T x) const
     {
         assert(!equal(x, T{0}));
         Vector result(Base::size());
@@ -90,7 +90,7 @@ public:
         return result;
     }
 
-	Vector operator+(const Vector& vec) const
+    Vector operator+(const Vector& vec) const
     {
         assert(Base::size() == vec.size());
         Vector result(Base::size());
@@ -101,7 +101,7 @@ public:
         return result;
     }
 
-	Vector operator-(const Vector& vec) const
+    Vector operator-(const Vector& vec) const
     {
         assert(Base::size() == vec.size());
         Vector result(Base::size());
@@ -111,44 +111,44 @@ public:
         }
         return result;
     }
-	
+
     Vector& operator+=(T x)
     {
         *this = *this + x;
         return *this;
     }
 
-	Vector& operator-=(T x)
+    Vector& operator-=(T x)
     {
         *this = *this - x;
         return *this;
     }
-    
-	Vector& operator*=(T x)
+
+    Vector& operator*=(T x)
     {
         *this = *this * x;
         return *this;
     }
-    
-	Vector& operator/=(T x)
+
+    Vector& operator/=(T x)
     {
         *this = *this / x;
         return *this;
     }
 
-	Vector& operator+=(const Vector& vec)
+    Vector& operator+=(const Vector& vec)
     {
         *this = *this + vec;
         return *this;
     }
-    
-	Vector& operator-=(const Vector& vec)
+
+    Vector& operator-=(const Vector& vec)
     {
         *this = *this - vec;
         return *this;
     }
 
-    bool isUnity() const
+    [[nodiscard]] bool isUnity() const
     {
         for (const auto& value : *this)
         {
@@ -160,7 +160,7 @@ public:
         return true;
     }
 
-    bool isZero() const
+    [[nodiscard]] bool isZero() const
     {
         for (const auto& value : *this)
         {
@@ -181,7 +181,7 @@ public:
         return *this;
     }
 
-    T norm(const uint32_t p) const
+    [[nodiscard]] T norm(const uint32_t p) const
     {
         if (0U == p)
         {
@@ -217,7 +217,7 @@ public:
         return T{0};
     }
 
-    T length() const
+    [[nodiscard]] T length() const
     {
         return norm(2);
     }
@@ -233,7 +233,7 @@ public:
         operator/=(T{1} / vec.length());
     }
 
-    T dot(const Vector& vec) const
+    [[nodiscard]] T dot(const Vector& vec) const
     {
         assert(Base::size() == vec.size());
         T result{};

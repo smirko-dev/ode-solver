@@ -16,7 +16,7 @@ public:
         Vector<T> y{function.getParams()};
         Vector<T> dy(y.size());
         Vector<T> dydx{function.derive(x, y)};
-            
+
         Vector<T> k1(y.size());
         for (size_t i{0U}; i < y.size(); ++i)
         {
