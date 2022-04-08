@@ -1,5 +1,6 @@
 
 #include "RungeKutta.h"
+#include <algorithm>
 #include <atomic>
 #include <fstream>
 #include <iostream>
@@ -46,30 +47,16 @@ public:
     {
         for (auto& body : m_bodies)
         {
-            body.file << body.position[0] << "\t";
-            body.file << body.position[1] << "\t";
-            body.file << body.position[2] << "\n";
+            for (size_t i{0U}; i < 3U; ++i)
+            {
+                body.file << body.position[i] << (i > 2U ? "\n" : "\t");
+                m_plotfile << body.position[i] << "\t";
+            }
 
-            m_plotfile << body.position[0] << "\t";
-            m_plotfile << body.position[1] << "\t";
-            m_plotfile << body.position[2] << "\t";
-
-            if (m_rangeX[0] > body.position[0])
-            {
-                m_rangeX[0] = body.position[0];
-            }
-            if (m_rangeX[1] < body.position[0])
-            {
-                m_rangeX[1] = body.position[0];
-            }
-            if (m_rangeY[0] > body.position[1])
-            {
-                m_rangeY[0]= body.position[1];
-            }
-            if (m_rangeY[1] < body.position[1])
-            {
-                m_rangeY[1] = body.position[1];
-            }
+            m_rangeX[0] = std::min(m_rangeX[0], body.position[0]);
+            m_rangeX[1] = std::min(m_rangeX[1], body.position[0]);
+            m_rangeY[0] = std::min(m_rangeY[0], body.position[1]);
+            m_rangeY[1] = std::min(m_rangeY[1], body.position[1]);
         }
         m_frames++;
         m_plotfile << std::endl;
@@ -234,7 +221,7 @@ int main(int argc, char** argv)
     if (argc >= 2)
     {
         World world{};
-        if (world.initialize(argv[1]))        
+        if (world.initialize(argv[1]))
         {
             Console console{};
             std::atomic<bool> run(true);
