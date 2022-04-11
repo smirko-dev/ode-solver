@@ -13,6 +13,14 @@ The [ODESolver](ode) library comes with two interface classes and the following 
 - Mid Point
 - Velocity Verlet
 
+## How to build
+
+```sh
+git clone git@github.com:smirko-dev/ode-solver.git
+cmake -B build -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 16 2019"
+cmake --build build --config Release
+```
+
 ## Examples
 
 ### Molecular Dynamics
