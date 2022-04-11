@@ -7,7 +7,7 @@
 
 ## Description
 
-The ODE solver library comes with two interface classes and the following implementations
+The [ODESolver](ode) library comes with two interface classes and the following implementations
 - Runge Kutta
 - Euler
 - Mid Point
