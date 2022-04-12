@@ -30,7 +30,12 @@ class Vector<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
 public:
     Vector() = default;
     Vector(const size_t size)
-        : std::vector<T>(size)
+        : Base(size)
+    {
+    }
+
+    Vector(std::initializer_list<T> rhs)
+        : Base{rhs}
     {
     }
 

@@ -34,11 +34,9 @@ public:
     }
 
 protected:
-    Vector<float_t> derive(float_t x, Vector<float_t>& y) final
+    Vector<float_t> derive(float_t x, [[maybe_unused]] Vector<float_t>& y) final
     {
-        Vector<float_t> dy(1u);
-        dy[0] = std::cos(x);
-        return dy;
+        return Vector<float_t>{std::cos(x)};
     }
     
     Vector<float_t> getParams() const final
