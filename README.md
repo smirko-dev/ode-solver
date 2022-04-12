@@ -23,6 +23,10 @@ cmake --build build --config Release
 
 ## Examples
 
+### [Minimal example](ode/README.md#Example)
+
+Example implementation of an ODEFunction using the Euler ODESolver.
+
 ### [Molecular Dynamics](moleculardynamics)
 
 With the [Lennard Jones Potential](https://en.wikipedia.org/wiki/Lennard-Jones_potential) the movements of molecules in a system can be calculated. This ODE 2nd order can be solved by using the [Velocity Verlet](https://en.wikipedia.org/wiki/Verlet_integration) algorithm.
