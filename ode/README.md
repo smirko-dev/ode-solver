@@ -16,6 +16,7 @@ Calculate `y=sin(x)` by `dy(x)=cos(x)` using the Euler method.
 
 ```cpp
 #include "Euler.h"
+#include <cmath>
 #include <iostream>
 
 class Derivative : public OdeFunction<float_t>
