@@ -23,10 +23,10 @@ cmake --build build --config Release
 
 ## Examples
 
-### Molecular Dynamics
+### [Molecular Dynamics](moleculardynamics)
 
-With the [Lennard Jones Potential](https://en.wikipedia.org/wiki/Lennard-Jones_potential) the movements of molecules in a system can be calculated which is an ODE 2nd order by using the [Velocity Verlet](https://en.wikipedia.org/wiki/Verlet_integration) algorithm.
+With the [Lennard Jones Potential](https://en.wikipedia.org/wiki/Lennard-Jones_potential) the movements of molecules in a system can be calculated. This ODE 2nd order can be solved by using the [Velocity Verlet](https://en.wikipedia.org/wiki/Verlet_integration) algorithm.
 
-### Planet Dynamics
+### [Planet Dynamics](planetdynamics)
 
-With the [Newton's law of universal gravitation](https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation) planet movement can be calculated which is an ODE 1st order by using the [Runge Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) algorithm. 
+With the [Newton's law of universal gravitation](https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation) planet movement can be calculated. This ODE 1st order can be solved by using the [Runge Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) algorithm. 
