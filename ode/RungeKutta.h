@@ -38,7 +38,7 @@ public:
         }
         for (size_t i{0U}; i < y.size(); ++i)
         {
-            yx[i] = y[i] + k1[i] / 2.F;
+            yx[i] = y[i] + k2[i] / 2.F;
         }
 
         dydx = function.derive(x + dx / 2.F, yx);
