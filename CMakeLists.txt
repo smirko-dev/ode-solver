@@ -21,3 +21,5 @@ ADD_SUBDIRECTORY(ode)
 
 ADD_SUBDIRECTORY(moleculardynamics)
 ADD_SUBDIRECTORY(planetdynamics)
+
+ADD_SUBDIRECTORY(test)
