@@ -47,10 +47,13 @@ private:
     Vector<float_t> m_data;
 };
 
+// Main funtion
 int main(int argc, char** argv)
 {
     Euler<float_t> euler{};
     Derivative derivative{};
+    
+    // Calculate and print results in range [0..1]
     static constexpr float_t dt{0.001F};
     for (float_t t{0.0F}; t < 1.F; t += dt)
     {
