@@ -25,7 +25,7 @@ cmake --build build --config Release
 
 ### [Minimal example](ode/README.md#Example)
 
-Example implementation of an ODEFunction using different ODESolver.
+Example implementation of an ODEFunction using the Euler ODESolver.
 
 ### [Molecular Dynamics](moleculardynamics)
 
