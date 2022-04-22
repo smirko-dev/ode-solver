@@ -11,9 +11,9 @@
  * @brief Floating point comparison
  */
 template<typename T, typename std::enable_if<std::is_floating_point<T>::value>* = nullptr>
-bool equal(const T a, const T b)
+bool equal(const T a, const T b, const T e = std::numeric_limits<T>::epsilon())
 {
-    return std::abs(a - b) < std::numeric_limits<T>::epsilon();
+    return std::abs(a - b) <= e;
 }
 
 /**
