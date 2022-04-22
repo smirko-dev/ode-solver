@@ -60,7 +60,7 @@ int main(int argc, char** argv)
         euler.calc(t, dt, y1);
         mp.calc(t, dt, y2);
         rk.calc(t, dt, y3);
-        auto y = std::sinf(t);
+        auto y = sinf(t);
         
         if (!equal(y1.getParams()[0u], y, e))
         {
