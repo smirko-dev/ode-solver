@@ -1,4 +1,4 @@
-# ODE
+# Ordinary Differential Equations Solver
 
 ![languages](https://img.shields.io/badge/languages-C++%20-blue)
 [![version](https://img.shields.io/badge/version-%200.2-blue)](https://github.com/smirko-dev/ode-solver/blob/main/CHANGELOG.md)
