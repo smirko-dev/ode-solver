@@ -10,7 +10,9 @@ The parameters are given in a single vector. The `setParams` and `getParams` met
 
 The ODE solver provides an interface for certain implementation´s.
 
-## Example - Lorenz attractor
+## Example
+
+[Lorenz system](https://en.wikipedia.org/wiki/Lorenz_system)
 
 ```cpp
 #include "ode/RungeKutta.h"
