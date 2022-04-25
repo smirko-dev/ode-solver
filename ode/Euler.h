@@ -2,16 +2,18 @@
 
 #include "OdeSolver.h"
 
+namespace ode
+{
 /**
  * @brief Euler class
  */
 template<typename T>
-class Euler : public OdeSolver<T>
+class Euler : public Solver<T>
 {
 public:
     Euler() = default;
 
-    Vector<T> calc(T x, T dx, OdeFunction<T>& function) final
+    Vector<T> calc(T x, T dx, Function<T>& function) final
     {
         Vector<T> y{function.getParams()};
         Vector<T> dy(y.size());
@@ -24,3 +26,4 @@ public:
         return dy;
     }
 };
+}

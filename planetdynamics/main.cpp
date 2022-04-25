@@ -7,6 +7,10 @@
 #include <string>
 #include <thread>
 
+using Vector = ode::Vector<float_t>;
+using Function = ode::Function<float_t>;
+using RungeKutta = ode::RungeKutta<float_t>;
+
 /**
  * Body class
  */
@@ -19,8 +23,8 @@ public:
     {
     }
     std::string name{}; //!< Planet name
-    Vector<float_t> position{}; //!< Position vector
-    Vector<float_t> velocity{}; //!< Velocity vector
+    Vector position{}; //!< Position vector
+    Vector velocity{}; //!< Velocity vector
     float_t radius{0.F}; //!< Radius
     float_t mass{0.F}; //!< Mass
     std::ofstream file{}; //!< Output stream
@@ -29,7 +33,7 @@ public:
 /**
  * World class
  */
-class World : public OdeFunction<float_t>
+class World : public Function
 {
 public:
     World() = default;
@@ -100,10 +104,10 @@ public:
     }
 
 protected:
-    Vector<float_t> derive(float_t x, Vector<float_t>& y) final
+    Vector derive(float_t x, Vector& y) final
     {
         const size_t size = m_bodies.size() * 6U;
-        Vector<float_t> dydx(size);
+        Vector dydx(size);
 
         for (uint32_t a{0U}; a < size; a += 6U)
         {
@@ -141,9 +145,9 @@ protected:
         return dydx;
     }
 
-    Vector<float_t> getParams() const final
+    Vector getParams() const final
     {
-        Vector<float_t> y(m_bodies.size() * 6U);
+        Vector y(m_bodies.size() * 6U);
 
         uint32_t i{0U};
         for (auto& body : m_bodies)
@@ -161,7 +165,7 @@ protected:
         return y;
     }
 
-    void setParams(const Vector<float_t>& y) final
+    void setParams(const Vector& y) final
     {
         if (y.size() == m_bodies.size() * 6U)
         {
@@ -183,7 +187,7 @@ protected:
     
 private:
     std::vector<Body> m_bodies{};
-    RungeKutta<float_t> m_solver{};
+    RungeKutta m_solver{};
     std::ofstream m_plotfile{};
     size_t m_frames{0U};
     float_t m_rangeX[2];

@@ -6,6 +6,10 @@
 #include <string>
 #include <thread>
 
+using Vector = ode::Vector<float_t>;
+using Function = ode::Function<float_t>;
+using VelocityVerlet = ode::VelocityVerlet<float_t>;
+
 /**
  * Body class
  */
@@ -18,9 +22,9 @@ public:
          , force(3U)
     {
     }
-    Vector<float_t> position{}; //!< Position vector
-    Vector<float_t> velocity{}; //!< Velocity vector
-    Vector<float_t> force{}; //!< Force vector
+    Vector position{}; //!< Position vector
+    Vector velocity{}; //!< Velocity vector
+    Vector force{}; //!< Force vector
     float_t mass{0.F}; //!< Mass
 };
 
@@ -40,7 +44,7 @@ public:
 /**
  * World class
  */
-class World : public OdeFunction<float_t>
+class World : public Function
 {
 public:
     World() = default;
@@ -120,10 +124,10 @@ public:
     }
 
 protected:
-    Vector<float_t> derive(float_t x, Vector<float_t>& y) final
+    Vector derive(float_t x, Vector& y) final
     {
         const size_t size = m_bodies.size() * 9U;
-        Vector<float_t> dydx = y;
+        Vector dydx = y;
 
         // Calculate Lennard Jones Potential
         lennardJones(y);
@@ -148,10 +152,10 @@ protected:
         return dydx;
     }
 
-    Vector<float_t> derive2(float_t x, Vector<float_t>& y, Vector<float_t>& dy) final
+    Vector derive2(float_t x, Vector& y, Vector& dy) final
     {
         const size_t size = m_bodies.size() * 9U;
-        Vector<float_t> dydx = y;
+        Vector dydx = y;
 
         // Calculate Lennard Jones Potential
         lennardJones(dydx);
@@ -173,9 +177,9 @@ protected:
         return dydx;
     }
 
-    Vector<float_t> getParams() const final
+    Vector getParams() const final
     {
-        Vector<float_t> y(m_bodies.size() * 9);
+        Vector y(m_bodies.size() * 9);
 
         uint32_t i{0U};
         for (auto& body : m_bodies)
@@ -198,7 +202,7 @@ protected:
         return y;
     }
 
-    void setParams(const Vector<float_t>& y) final
+    void setParams(const Vector& y) final
     {
         if (y.size() == m_bodies.size() * 9)
         {
@@ -223,10 +227,10 @@ protected:
         }
     }
     
-    void lennardJones(Vector<float_t>& y)
+    void lennardJones(Vector& y)
     {
         const size_t size = m_bodies.size() * 9U;
-        Vector<float_t> dr(size);
+        Vector dr(size);
         float_t pot = 0.F;
         float_t rho = 0.F;
 
@@ -284,7 +288,7 @@ protected:
 private:
     Energy m_energy{};
     std::vector<Body> m_bodies{};
-    VelocityVerlet<float_t> m_solver{};
+    VelocityVerlet m_solver{};
     std::ofstream m_plotfile{};
     size_t m_frames{0U};
     float_t m_rangeX[2];

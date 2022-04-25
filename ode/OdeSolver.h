@@ -2,14 +2,16 @@
 
 #include "OdeFunction.h"
 
+namespace ode
+{
 /**
  * @brief OdeSolver class
  */
 template<typename T, typename Enable = void>
-class OdeSolver;
+class Solver;
 
 template<typename T>
-class OdeSolver<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
+class Solver<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
 {
 public:
     /**
@@ -19,7 +21,7 @@ public:
      * @param function   Ode function
      * @return calculated parameters
      */
-    virtual Vector<T> calc(T x, T dx, OdeFunction<T>& function) = 0;
+    virtual Vector<T> calc(T x, T dx, Function<T>& function) = 0;
 
     /**
      * Calculate integration step
@@ -30,7 +32,7 @@ public:
      * @param function   Ode function
      * @return calculated parameters
      */
-    virtual Vector<T> calcRange(T x0, const Vector<T>& y0, T x, T dx, OdeFunction<T>& function)
+    virtual Vector<T> calcRange(T x0, const Vector<T>& y0, T x, T dx, Function<T>& function)
     {
         Vector<T> y{y0};
         for (T t{x0}; t <= x; t += dx)
@@ -40,3 +42,4 @@ public:
         return y;
     }
 };
+}

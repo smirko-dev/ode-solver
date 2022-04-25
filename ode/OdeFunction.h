@@ -2,14 +2,16 @@
 
 #include "Vector.h"
 
+namespace ode
+{
 /**
  * @brief OdeFunction class
  */
 template<typename T, typename Enable = void>
-class OdeFunction;
+class Function;
 
 template<typename T>
-class OdeFunction<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
+class Function<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
 {
 public:
     /**
@@ -46,3 +48,4 @@ public:
      */
     virtual void setParams(const Vector<T>& y) = 0;
 };
+}

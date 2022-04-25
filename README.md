@@ -1,7 +1,7 @@
 # ODE Solver
 
 ![languages](https://img.shields.io/badge/languages-C++%20-blue)
-[![version](https://img.shields.io/badge/version-%200.1-blue)](https://github.com/smirko-dev/ode-solver/blob/main/CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-%200.2-blue)](https://github.com/smirko-dev/ode-solver/blob/main/CHANGELOG.md)
 [![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/smirko-dev/ode-solver/blob/main/LICENSE)
 [![Build Actions Status](https://github.com/smirko-dev/ode-solver/workflows/Build/badge.svg)](https://github.com/smirko-dev/ode-solver/actions)
 

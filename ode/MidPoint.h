@@ -2,16 +2,18 @@
 
 #include "OdeSolver.h"
 
+namespace ode
+{
 /**
  * @brief MidPoint class
  */
 template<typename T>
-class MidPoint : public OdeSolver<T>
+class MidPoint : public Solver<T>
 {
 public:
     MidPoint() = default;
 
-    Vector<T> calc(T x, T dx, OdeFunction<T>& function) final
+    Vector<T> calc(T x, T dx, Function<T>& function) final
     {
         Vector<T> y{function.getParams()};
         Vector<T> dy(y.size());
@@ -37,3 +39,4 @@ public:
         return dy;
     }
 };
+}

@@ -3,9 +3,9 @@
 # ODE Solver
 ################################################################################
 
-ADD_LIBRARY(OdeSolver INTERFACE)
+ADD_LIBRARY(ode INTERFACE)
 
-TARGET_SOURCES(OdeSolver INTERFACE
+TARGET_SOURCES(ode INTERFACE
     Vector.h
     OdeFunction.h
     OdeSolver.h
@@ -15,4 +15,4 @@ TARGET_SOURCES(OdeSolver INTERFACE
     VelocityVerlet.h
 )
 
-TARGET_INCLUDE_DIRECTORIES(OdeSolver INTERFACE ${CMAKE_CURRENT_LIST_DIR})
+TARGET_INCLUDE_DIRECTORIES(ode INTERFACE ${CMAKE_CURRENT_LIST_DIR})

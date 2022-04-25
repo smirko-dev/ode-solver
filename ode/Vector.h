@@ -7,6 +7,8 @@
 #include <type_traits>
 #include <vector>
 
+namespace ode
+{
 /**
  * @brief Floating point comparison
  */
@@ -250,3 +252,4 @@ public:
     }
 
 };
+}

@@ -2,16 +2,18 @@
 
 #include "OdeSolver.h"
 
+namespace ode
+{
 /**
  * @brief RungeKutta class
  */
 template<typename T>
-class RungeKutta : public OdeSolver<T>
+class RungeKutta : public Solver<T>
 {
 public:
     RungeKutta() = default;
 
-    Vector<T> calc(T x, T dx, OdeFunction<T>& function) final
+    Vector<T> calc(T x, T dx, Function<T>& function) final
     {
         Vector<T> y{function.getParams()};
         Vector<T> dy(y.size());
@@ -65,3 +67,4 @@ public:
         return dy;
     }
 };
+}

@@ -5,8 +5,14 @@
 #include <iostream>
 #include <string>
 
+using Vector = ode::Vector<float_t>;
+using Function = ode::Function<float_t>;
+using Euler = ode::Euler<float_t>;
+using MidPoint = ode::MidPoint<float_t>;
+using RungeKutta = ode::RungeKutta<float_t>;
+
 // Derivative of a function
-class Derivative : public OdeFunction<float_t>
+class Derivative : public Function
 {
 public:
     Derivative()
@@ -14,23 +20,23 @@ public:
     {
     }
 
-    Vector<float_t> derive(float_t x, [[maybe_unused]] Vector<float_t>& y) final
+    Vector derive(float_t x, [[maybe_unused]] Vector& y) final
     {
-        return Vector<float_t>{std::cos(x)};
+        return Vector{std::cos(x)};
     }
     
-    Vector<float_t> getParams() const final
+    Vector getParams() const final
     {
         return m_data;
     }
     
-    void setParams(const Vector<float_t>& y) final
+    void setParams(const Vector& y) final
     {
         m_data += y;
     }
 
 private:
-    Vector<float_t> m_data;
+    Vector m_data;
 };
 
 // Main funtion
@@ -42,13 +48,13 @@ int main(int argc, char** argv)
         silent = true;
     }
 
-    Euler<float_t> euler{};
+    Euler euler{};
     Derivative y1{};
 
-    MidPoint<float_t> mp{};
+    MidPoint mp{};
     Derivative y2{};
 
-    RungeKutta<float_t> rk{};
+    RungeKutta rk{};
     Derivative y3{};
 
     // Calculate and print results in range [0..1]
@@ -62,17 +68,17 @@ int main(int argc, char** argv)
         rk.calc(t, dt, y3);
         auto y = sinf(t);
         
-        if (!equal(y1.getParams()[0u], y, e))
+        if (!ode::equal(y1.getParams()[0u], y, e))
         {
             errors = true;
             std::cerr << "Mismatch Euler(" << t << ")=" << y1.getParams()[0u] << " != " << y << std::endl;
         }
-        if (!equal(y2.getParams()[0u], y, e))
+        if (!ode::equal(y2.getParams()[0u], y, e))
         {
             errors = true;
             std::cerr << "Mismatch MidPoint(" << t << ")=" << y1.getParams()[0u] << " != " << y << std::endl;
         }
-        if (!equal(y3.getParams()[0u], y, e))
+        if (!ode::equal(y3.getParams()[0u], y, e))
         {
             errors = true;
             std::cerr << "Mismatch RungeKutta(" << t << ")=" << y1.getParams()[0u] << " != " << y << std::endl;
