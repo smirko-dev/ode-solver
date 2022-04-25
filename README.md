@@ -7,11 +7,11 @@
 
 ## Description
 
-The [ODESolver](ode) library comes with two interface classes and the following implementations
-- Runge Kutta
-- Euler
-- Mid Point
-- Velocity Verlet
+The [ode](ode) template library comes with two interface classes and the following implementations
+- [Runge Kutta](ode/RungeKutta.h)
+- [Euler](ode/Euler.h)
+- [Mid Point](ode/MidPoint.h)
+- [Velocity Verlet](ode/VelocityVerlet.h)
 
 ## How to build
 
