@@ -41,7 +41,7 @@ public:
 
         Vector dydx(3u);
         dydx[0u] = sigma * (y[1u] - y[0u]);
-        dydx[1u] = R * y[0u] - y[1u] - y[0u] * y[2u];
+        dydx[1u] = y[0u] * (R - y[2u]) - y[1u];
         dydx[2u] = y[0u] * y[1u] - b * y[2u];
         return dydx * m_dt;
     }
