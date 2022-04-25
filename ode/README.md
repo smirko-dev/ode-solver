@@ -10,9 +10,7 @@ The parameters are given in a single vector. The `setParams` and `getParams` met
 
 The ODE solver provides an interface for certain implementation´s.
 
-## Example
-
-Calculate Lorenz attractor by using [Runke Kutta](ode/RungeKutta.h).
+## Example - Lorenz attractor
 
 ```cpp
 #include "ode/RungeKutta.h"
