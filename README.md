@@ -25,9 +25,9 @@ cmake --build build --config Release
 
 ## Examples
 
-### [Minimal example](ode/README.md#Example)
+### [Lorenz attractor](ode/README.md#Example)
 
-Example implementation of using Euler to solve a simple function.
+Calculate Lorenz attractor by using [Runge Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) algorithm.
 
 ### [Molecular Dynamics](moleculardynamics)
 
@@ -35,4 +35,4 @@ With the [Lennard Jones Potential](https://en.wikipedia.org/wiki/Lennard-Jones_p
 
 ### [Planet Dynamics](planetdynamics)
 
-With the [Newton's law of universal gravitation](https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation) planet movement can be calculated. This ODE 1st order can be solved by using the [Runge Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) algorithm. 
+With the [Newton's law of universal gravitation](https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation) planet movement can be calculated. This ODE 1st order can be solved by using the [Runge Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) algorithm.
