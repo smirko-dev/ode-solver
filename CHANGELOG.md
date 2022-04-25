@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Namespace ode
 - Include folder ode
+- Lorenz ODE example
 
 ## Version 0.1
 
