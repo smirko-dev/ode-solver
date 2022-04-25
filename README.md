@@ -7,7 +7,9 @@
 
 ## Description
 
-The [ode](ode) template library comes with two interface classes and the following implementations
+The [ode](ode) template library comes with two interface classes [ode::Function](ode/OdeFunction.h) and [ode::Solver](ode/OdeSolver.h).
+
+The following implementations are included:
 - [Runge Kutta](ode/RungeKutta.h)
 - [Euler](ode/Euler.h)
 - [Mid Point](ode/MidPoint.h)
@@ -25,7 +27,7 @@ cmake --build build --config Release
 
 ### [Minimal example](ode/README.md#Example)
 
-Example implementation of an ode::Function using the Euler ode::Solver.
+Example implementation of using Euler to solve a simple function.
 
 ### [Molecular Dynamics](moleculardynamics)
 
