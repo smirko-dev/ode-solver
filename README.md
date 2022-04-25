@@ -27,7 +27,7 @@ cmake --build build --config Release
 
 ### [Lorenz attractor](ode/README.md#Example)
 
-Calculate Lorenz attractor by using [Runge Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) algorithm.
+Calculate [Lorenz attractor](https://en.wikipedia.org/wiki/Lorenz_system) by using [Runge Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) algorithm.
 
 ### [Molecular Dynamics](moleculardynamics)
 
