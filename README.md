@@ -7,7 +7,7 @@
 
 ## Description
 
-The [ode](ode) template library comes with two interface classes [ode::Function](ode/OdeFunction.h) and [ode::Solver](ode/OdeSolver.h).
+The [ode](ode) template library comes with two interface classes [ode::Function](ode/ode/Function.h) and [ode::Solver](ode/ode/Solver.h).
 
 The following implementations are included:
 - [Runge Kutta](ode/RungeKutta.h)

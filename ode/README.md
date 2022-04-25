@@ -2,20 +2,20 @@
 
 ## ode::Function
 
-The function for an ODE solver needs to provide the derivative (1st and optional 2nd oder) of an equation.
+The function for an ODE solver needs to provide the derivative (1st and optional 2nd oder) of an equation with the methods `derive` and `derive2`.
 
-The parameters are given in a single vector. The setParams and getParams methods implement the mapping of the parameters. 
+The parameters are given in a single vector. The `setParams` and `getParams` methods implement the mapping of the parameters since the solver just iterates of the given vector.
 
 ## ode::Solver
 
-The ODE solver provides an interface for certain implementation´s. 
+The ODE solver provides an interface for certain implementation´s.
 
 ## Example
 
-Calculate `y=sin(x)` by `dy(x)=cos(x)` using the Euler method. 
+Calculate `y=sin(x)` by `dy(x)=cos(x)` using the Euler method.
 
 ```cpp
-#include "Euler.h"
+#include "ode/Euler.h"
 #include <cmath>
 
 using Vector = ode::Vector<float_t>;

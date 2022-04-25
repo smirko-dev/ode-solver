@@ -1,6 +1,6 @@
-#include "Euler.h"
-#include "MidPoint.h"
-#include "RungeKutta.h"
+#include "ode/Euler.h"
+#include "ode/MidPoint.h"
+#include "ode/RungeKutta.h"
 #include <cmath>
 #include <iostream>
 #include <string>
