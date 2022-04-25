@@ -12,7 +12,7 @@ The ODE solver provides an interface for certain implementation´s.
 
 ## Example
 
-Calculate `y=sin(x)` by `dy(x)=cos(x)` using the Euler method. 
+Calculate `y(x)=sin(x)` by `dy(x)=cos(x)` using the Euler method. 
 
 ```cpp
 #include "Euler.h"
