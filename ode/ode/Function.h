@@ -29,11 +29,8 @@ public:
      * @param dy     List of derived parameters
      * @return List of calculated parameters
      */
-    virtual Vector<T> derive2(T x, Vector<T>& y, Vector<T>& dy)
+    virtual Vector<T> derive2([[maybe_unused]] T x, [[maybe_unused]] Vector<T>& y, [[maybe_unused]] Vector<T>& dy)
     {
-        (void)x;
-        (void)y;
-        (void)dy;
         return Vector<T>{};
     }
 
