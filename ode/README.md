@@ -24,10 +24,10 @@ using Vector = ode::Vector<float_t>;
 using Function = ode::Function<float_t>;
 using Euler = ode::Euler<float_t>;
 
-class Function : public Function
+class Derivative : public Function
 {
 public:
-    Function()
+    Derivative()
         : m_data(1u)
     {
     }
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
     static constexpr float_t dt{0.001F};
 
     Euler euler{};
-    Function y{};
+    Derivative y{};
 
     for (float_t t{0.0F}; t < 1.F; t += dt)
     {
