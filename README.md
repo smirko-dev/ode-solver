@@ -25,7 +25,7 @@ cmake --build build --config Release
 
 ## Examples
 
-### [Lorenz attractor](ode/README.md#Example)
+### [Lorenz attractor](lorenz)
 
 Calculate [Lorenz attractor](https://en.wikipedia.org/wiki/Lorenz_system) by using [Runge Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) algorithm.
 
