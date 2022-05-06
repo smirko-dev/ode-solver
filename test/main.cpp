@@ -1,94 +1,73 @@
-#include "ode/Euler.h"
-#include "ode/MidPoint.h"
-#include "ode/RungeKutta.h"
+#include <array>
 #include <cmath>
+#include <functional>
 #include <iostream>
 #include <string>
 
-using Vector = ode::Vector<float_t>;
-using Function = ode::Function<float_t>;
-using Euler = ode::Euler<float_t>;
-using MidPoint = ode::MidPoint<float_t>;
-using RungeKutta = ode::RungeKutta<float_t>;
-
-// Derivative of a function
-class Derivative : public Function
-{
-public:
-    Derivative()
-        : m_data(1u)
-    {
-    }
-
-    Vector derive(float_t x, [[maybe_unused]] Vector& y) final
-    {
-        return Vector{std::cos(x)};
-    }
-    
-    Vector getParams() const final
-    {
-        return m_data;
-    }
-    
-    void setParams(const Vector& y) final
-    {
-        m_data += y;
-    }
-
-private:
-    Vector m_data;
-};
+#include "ode/Euler.h"
+#include "ode/MidPoint.h"
+#include "ode/RungeKutta.h"
+#include "ode/VelocityVerlet.h"
 
 // Main funtion
 int main(int argc, char** argv)
 {
-    bool silent{false};
-    if (argc > 1 && std::string("--silent") == argv[1])
+    ode::Euler<float_t> euler1{};
+    ode::Euler<ode::Vector<float_t>> euler2{};
+
+    ode::MidPoint<float_t> midpoint1{};
+    ode::MidPoint<ode::Vector<float_t>> midpoint2{};
+
+    ode::RungeKutta<float_t> rungekutta1{};
+    ode::RungeKutta<ode::Vector<float_t>> rungekutta2{};
+
+    ode::VelocityVerlet<float_t> velocityverlet1{};
+    ode::VelocityVerlet<ode::Vector<float_t>> velocityverlet2{};
+
+    float_t y1{0.F}, y2{.0F}, y3{0.}, y4{0.}, dy{1.};
+    ode::Vector<float_t> yv{0.F, 1.F}, dyv{0.F, 1.F};
+
+    auto func1 = [](const float_t x, [[maybe_unused]] const float_t& y) -> float_t
     {
-        silent = true;
+            return std::cos(x);
+    };
+    auto func2 = [](const float_t x, [[maybe_unused]] const ode::Vector<float_t>& y) -> ode::Vector<float_t>
+    {
+        ode::Vector<float_t> res(y.size());
+        for (size_t i{0u}; i < y.size(); ++i)
+        {
+            res[i] = std::cos(x);
+        }
+        return res;
+    };
+    auto func3 = [](const float_t x, [[maybe_unused]] const float_t& y) -> float_t
+    {
+            return -std::sin(x);
+    };
+    auto func4 = [](const float_t x, [[maybe_unused]] const ode::Vector<float_t>& y) -> ode::Vector<float_t>
+    {
+        ode::Vector<float_t> res(y.size());
+        for (size_t i{0u}; i < y.size(); ++i)
+        {
+            res[i] = -std::sin(x);
+        }
+        return res;
+    };
+
+    yv = euler2(.5F, .1F, yv, func2);
+    yv = midpoint2(.5F, .1F, yv, func2);
+    yv = rungekutta2(.5F, .1F, yv, func2);
+    yv = velocityverlet2(.5F, .1F, yv, dyv, func4);
+
+    static constexpr float_t dx{.001F};
+    for (float_t x{0.F}; x < 1.F; x+= dx)
+    {
+        y1 = euler1(x, dx, y1, func1);
+        y2 = midpoint1(x, dx, y2, func1);
+        y3 = rungekutta1(x, dx, y3, func1);
+        y4 = velocityverlet1(x, dx, y4, dy, func3);
+        std::cout << std::sin(x) << "\t" << y1 << "\t" << y2 << "\t" << y3 << "\t" << y4 << std::endl;
     }
 
-    Euler euler{};
-    Derivative y1{};
-
-    MidPoint mp{};
-    Derivative y2{};
-
-    RungeKutta rk{};
-    Derivative y3{};
-
-    // Calculate and print results in range [0..1]
-    bool errors{false};
-    static constexpr float_t dt{0.001F};
-    static constexpr float_t e{0.001F};
-    for (float_t t{0.0F}; t < 1.F; t += dt)
-    {
-        euler.calc(t, dt, y1);
-        mp.calc(t, dt, y2);
-        rk.calc(t, dt, y3);
-        auto y = sinf(t);
-        
-        if (!ode::equal(y1.getParams()[0u], y, e))
-        {
-            errors = true;
-            std::cerr << "Mismatch Euler(" << t << ")=" << y1.getParams()[0u] << " != " << y << std::endl;
-        }
-        if (!ode::equal(y2.getParams()[0u], y, e))
-        {
-            errors = true;
-            std::cerr << "Mismatch MidPoint(" << t << ")=" << y1.getParams()[0u] << " != " << y << std::endl;
-        }
-        if (!ode::equal(y3.getParams()[0u], y, e))
-        {
-            errors = true;
-            std::cerr << "Mismatch RungeKutta(" << t << ")=" << y1.getParams()[0u] << " != " << y << std::endl;
-        }
-
-        if (!silent)
-        {
-            std::cout << t << "\t" << y1.getParams()[0u]<< "\t" << y2.getParams()[0u]<< "\t" << y3.getParams()[0u] << "\t" << std::sin(t) << std::endl;
-        }
-    }
-
-    return (errors ? -1 : 0);
+    return 0;
 }

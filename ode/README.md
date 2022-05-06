@@ -12,7 +12,6 @@ The ODE solver provides an interface for certain implementation´s.
 
 ## Example
 
-
 Solve `f(x) = sin(x)` with `f'(x) = cos(x)` by using the Euler algorithm.
 
 ```cpp
@@ -24,10 +23,10 @@ using Vector = ode::Vector<float_t>;
 using Function = ode::Function<float_t>;
 using Euler = ode::Euler<float_t>;
 
-class Derivative : public Function
+class Function : public Function
 {
 public:
-    Derivative()
+    Function()
         : m_data(1u)
     {
     }
@@ -56,7 +55,7 @@ int main(int argc, char** argv)
     static constexpr float_t dt{0.001F};
 
     Euler euler{};
-    Derivative y{};
+    Function y{};
 
     for (float_t t{0.0F}; t < 1.F; t += dt)
     {

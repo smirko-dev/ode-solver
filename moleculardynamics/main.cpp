@@ -1,5 +1,6 @@
 
 #include "ode/VelocityVerlet.h"
+#include <array>
 #include <atomic>
 #include <fstream>
 #include <iostream>
@@ -7,8 +8,7 @@
 #include <thread>
 
 using Vector = ode::Vector<float_t>;
-using Function = ode::Function<float_t>;
-using VelocityVerlet = ode::VelocityVerlet<float_t>;
+using VelocityVerlet = ode::VelocityVerlet<Vector>;
 
 /**
  * Body class
@@ -44,15 +44,17 @@ public:
 /**
  * World class
  */
-class World : public Function
+class World
 {
 public:
     World() = default;
 
     void step(const float_t t, const float_t dt)
     {
+        using namespace std::placeholders;
+
         // Calculate new values
-        m_solver.calc(t, dt, *this);
+        m_data[0u] += m_solver(t, dt, m_data[0u], m_data[1u], std::bind(&World::calculate, this, _1, _2));
 
         // Calculate energy
         kineticEnergy();
@@ -102,6 +104,9 @@ public:
             file >> count;
             std::cout << "Number of bodies = " << count << std::endl;
             m_bodies.resize(count);
+            m_data[0u].resize(count * 3u);
+            m_data[1u].resize(count * 3u);
+            m_data[2u].resize(count * 3u);
             for (uint32_t i{0U}; i < count; ++i)
             {
                 file >> m_bodies[i].position[0];
@@ -124,7 +129,12 @@ public:
     }
 
 protected:
-    Vector derive(float_t x, Vector& y) final
+    Vector calculate(const float_t x, const Vector& y)
+    {
+        return Vector{};
+    }
+
+    /*Vector derive(float_t x, Vector& y) final
     {
         const size_t size = m_bodies.size() * 9U;
         Vector dydx = y;
@@ -225,7 +235,7 @@ protected:
                 body.force[2] = y[i++];
             }
         }
-    }
+    }*/
     
     void lennardJones(Vector& y)
     {
@@ -288,6 +298,7 @@ protected:
 private:
     Energy m_energy{};
     std::vector<Body> m_bodies{};
+    std::array<Vector, 3u> m_data{};
     VelocityVerlet m_solver{};
     std::ofstream m_plotfile{};
     size_t m_frames{0U};

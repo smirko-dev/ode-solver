@@ -9,25 +9,23 @@
 
 namespace ode
 {
-/**
- * @brief Floating point comparison
- */
+/// @brief Floating point comparison
 template<typename T, typename std::enable_if<std::is_floating_point<T>::value>* = nullptr>
 bool equal(const T a, const T b, const T e = std::numeric_limits<T>::epsilon())
 {
     return std::abs(a - b) <= e;
 }
 
-/**
- * @brief Vector class
- */
 template<typename T, typename Enable = void>
 class Vector;
 
+/// @brief Vector class specialized for floating point types
 template<typename T>
 class Vector<T, typename std::enable_if<std::is_floating_point<T>::value>::type> : public std::vector<T>
 {
+public:
     using Base = std::vector<T>;
+    using value_type = typename Base::value_type;
 
 public:
     Vector() = default;
@@ -250,6 +248,5 @@ public:
         }
         return result;
     }
-
 };
 }
