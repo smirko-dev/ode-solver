@@ -12,4 +12,4 @@ TARGET_LINK_LIBRARIES(runtest PRIVATE ode)
 
 ENABLE_TESTING()
 
-ADD_TEST(NAME runtest COMMAND runtest)
+ADD_TEST(NAME runtest COMMAND runtest --silent)
