@@ -1,5 +1,18 @@
 # ODE
 
+## Description
+
+[ode](ode) is a header only library. Included are 
+ - a [Vector](ode/Vector.h) template class for vector math
+ - a [Function](ode/Solver.h) alias for derivative functions
+ - a [Solver](oder/Solver.h) template class for type specialization
+
+Included ode solver implementations are
+ - [Euler](oder/Euler.h)
+ - [Mid Point](ode/MidPoint.h)
+ - [Runge Kutta](ode/RungeKutta.h)
+ - [Velocity Verlet](ode/VelocityVerlet.h)
+
 ## Example
 
 Solve `f(x) = sin(x)` with `f'(x) = cos(x)` by using the Euler algorithm.
