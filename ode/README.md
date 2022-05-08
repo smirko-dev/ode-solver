@@ -2,16 +2,10 @@
 
 ## Description
 
-[ode](ode) is a header only library. Included are 
- - a [Vector](ode/Vector.h) template class for vector math
- - a [Function](ode/Solver.h) alias for derivative functions
- - a [Solver](ode/Solver.h) template class for type specialization
-
-Included ode solver implementations are
- - [Euler](ode/Euler.h)
- - [Mid Point](ode/MidPoint.h)
- - [Runge Kutta](ode/RungeKutta.h)
- - [Velocity Verlet](ode/VelocityVerlet.h)
+[ode](ode) is a header only template library.
+The [ode::Vector](ode/Vector.h) template class implements vector math.
+The [ode::Function](ode/Solver.h) alias provides the signature for derivative functions used by the different solver implementations.
+The [ode::Solver](ode/Solver.h) class provides supported template specializations.
 
 ## Example
 
