@@ -4,67 +4,33 @@
 
 namespace ode
 {
-/**
- * @brief RungeKutta class
- */
-template<typename T>
-class RungeKutta : public Solver<T>
-{
-public:
-    RungeKutta() = default;
-
-    Vector<T> calc(T x, T dx, Function<T>& function) final
+    /// @brief RungeKutta solver class
+    template<typename T>
+    class RungeKutta : public Solver<T>
     {
-        Vector<T> y{function.getParams()};
-        Vector<T> dy(y.size());
-        Vector<T> yx(y.size());
-        Vector<T> k1(y.size());
-        Vector<T> k2(y.size());
-        Vector<T> k3(y.size());
-        Vector<T> k4(y.size());
+    public:
+        using V = typename Solver<T>::Type;
 
-        Vector<T> dydx{function.derive(x, y)};
-        for (size_t i{0U}; i < y.size(); ++i)
+        RungeKutta() = default;
+        [[nodiscard]] T operator()(const V x, const V dx, const T& y, Function<T, V> function)
         {
-            k1[i] = dx * dydx[i];
-        }
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            yx[i] = y[i] + k1[i] / 2.F;
-        }
+            T dydx{function(x, y)};
+            T k1 = dydx * dx;
+            T yx = y + k1 / V{.5};
 
-        dydx = function.derive(x + dx / 2.F, yx);
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            k2[i] = dx * dydx[i];
-        }
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            yx[i] = y[i] + k1[i] / 2.F;
-        }
+            dydx = function(x + dx / V{2.}, yx);
+            T k2 = dydx * dx;
+            yx = y + k2 / V{2.};
 
-        dydx = function.derive(x + dx / 2.F, yx);
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            k3[i] = dx * dydx[i];
-        }
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            yx[i] = y[i] + k3[i] / 2.F;
-        }
+            dydx = function(x + dx / V{2.}, yx);
+            T k3 = dydx * dx;
+            yx = y + k3 / V{2.};
 
-        dydx = function.derive(x + dx, yx);
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            k4[i] = dx * dydx[i];
-        }
+            dydx = function(x + dx / V{2.}, yx);
+            T k4 = dydx * dx;
 
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            dy[i] = (k1[i] + (k2[i] * 2.F) + (k3[i] * 2.F) + k4[i]) / 6.F;
+            T dy = (k1 + (k2 * V{2.}) + (k3 * V{2.}) + k4) / V{6.};
+            return y + dy;
         }
-        function.setParams(dy);
-        return dy;
-    }
-};
+    };
 }

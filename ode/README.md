@@ -1,17 +1,13 @@
 # ODE
 
-## ode::Function
+## Description
 
-The function for an ODE solver needs to provide the derivative (1st and optional 2nd oder) of an equation with the methods `derive` and `derive2`.
-
-The parameters are given in a single vector. The `setParams` and `getParams` methods implement the mapping of the parameters since the solver just iterates of the given vector.
-
-## ode::Solver
-
-The ODE solver provides an interface for certain implementation´s.
+[ode](ode) is a header only template library.
+The [ode::Vector](ode/Vector.h) template class implements vector math.
+The [ode::Function](ode/Solver.h) alias provides the signature for derivative functions used by the different solver implementations.
+The [ode::Solver](ode/Solver.h) class provides supported template specializations.
 
 ## Example
-
 
 Solve `f(x) = sin(x)` with `f'(x) = cos(x)` by using the Euler algorithm.
 
@@ -20,48 +16,20 @@ Solve `f(x) = sin(x)` with `f'(x) = cos(x)` by using the Euler algorithm.
 #include <cmath>
 #include <iostream>
 
-using Vector = ode::Vector<float_t>;
-using Function = ode::Function<float_t>;
-using Euler = ode::Euler<float_t>;
-
-class Derivative : public Function
-{
-public:
-    Derivative()
-        : m_data(1u)
-    {
-    }
-
-    Vector derive(float_t x, [[maybe_unused]] Vector& y) final
-    {
-        return Vector{std::cos(x)};
-    }
-
-    Vector getParams() const final
-    {
-        return m_data;
-    }
-
-    void setParams(const Vector& y) final
-    {
-        m_data += y;
-    }
-
-private:
-    Vector m_data;
-};
-
 int main(int argc, char** argv)
 {
     static constexpr float_t dt{0.001F};
 
-    Euler euler{};
-    Derivative y{};
+    float_t y{0.F};
+    ode::Euler<float_t> euler{};
 
     for (float_t t{0.0F}; t < 1.F; t += dt)
     {
-        euler.calc(t, dt, y);
-        std::cout << t << "," << y.getParams()[0u] << "," << std::sin(x) << std::endl;
+        y = euler.calc(t, dt, [](const float_t x, [[maybe_unused]] const float_t& y)
+        {
+            return std::cos(x);
+        });
+        std::cout << t << "," << y << "," << std::sin(x) << std::endl;
     }
 }
 ```

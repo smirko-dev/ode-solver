@@ -4,26 +4,17 @@
 
 namespace ode
 {
-/**
- * @brief Euler class
- */
-template<typename T>
-class Euler : public Solver<T>
-{
-public:
-    Euler() = default;
-
-    Vector<T> calc(T x, T dx, Function<T>& function) final
+    /// @brief Euler solver class
+    template<typename T>
+    class Euler : public Solver<T>
     {
-        Vector<T> y{function.getParams()};
-        Vector<T> dy(y.size());
-        Vector<T> dydx{function.derive(x, y)};
-        for (size_t i{0U}; i < y.size(); ++i)
+    public:
+        using V = typename Solver<T>::Type;
+
+        Euler() = default;
+        [[nodiscard]] T operator()(const V x, const V dx, const T& y, Function<T, V> function)
         {
-            dy[i] = dydx[i] * dx;
+            return y + function(x, y) * dx;
         }
-        function.setParams(dy);
-        return dy;
-    }
-};
+    };
 }

@@ -17,3 +17,7 @@ Planet data containing the name (string) position [x] (float_t), velocity [dx] (
 ```sh
 pd planets.dat
 ```
+
+## Result
+
+<img src="solarsystem.png" />

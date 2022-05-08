@@ -1,197 +1,149 @@
 
-#include "ode/RungeKutta.h"
+#include "ode/VelocityVerlet.h"
 #include <algorithm>
+#include <array>
 #include <atomic>
+#include <cmath>
+#include <functional>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <thread>
 
-using Vector = ode::Vector<float_t>;
-using Function = ode::Function<float_t>;
-using RungeKutta = ode::RungeKutta<float_t>;
-
-/**
- * Body class
- */
-class Body
+class PlanetSystem
 {
 public:
-    Body()
-         : position(3U)
-         , velocity(3U)
-    {
-    }
-    std::string name{}; //!< Planet name
-    Vector position{}; //!< Position vector
-    Vector velocity{}; //!< Velocity vector
-    float_t radius{0.F}; //!< Radius
-    float_t mass{0.F}; //!< Mass
-    std::ofstream file{}; //!< Output stream
-};
+    using Type = double_t;
+    using Vector = ode::Vector<Type>;
+    using Solver = ode::VelocityVerlet<Vector>;
 
-/**
- * World class
- */
-class World : public Function
-{
+    static constexpr Type Day = 60. * 60. * 24.; // Day in sec
+    static constexpr Type Au = 1.496e11; // Astronomical unit in m
+    static constexpr Type Sol = 1.989e30; // Mass of the sun in kg
+    static constexpr Type G = 6.67408e-11 / (Au * Au * Au) * Sol * (Day * Day); // Gravtitational constant
+    static constexpr Type Eps = Sol * (Au * Au) / (Day * Day); // Typical energy scale
+
+    class Body
+    {
+    public:
+        Body() = default;
+        std::string name{};
+        Type position{}; // Position x value
+        Type velocity{}; // Velocity y value
+        Type mass{};
+    };
+
 public:
-    World() = default;
+    PlanetSystem() = default;
 
-    void step(const float_t t, const float_t dt)
+    void step(const Type t, const Type dt)
     {
-        // Calculate new values
-        m_solver.calc(t, dt, *this);
+        using namespace std::placeholders;
+        m_pos += m_solver(t, dt, m_pos, m_vel, std::bind(&PlanetSystem::calculate, this, _1, _2));
 
-        // Print results to files
-        print();
+        Type Ekin{0.0}, Epot{0.0};
+        for (size_t i{0u}; i < m_pos.size(); ++i)
+        {
+            Ekin += m_ekin[i];
+            Epot += m_epot[i];
+            m_output << m_pos[i * 3u] << ",";
+        }
+        m_output << Ekin << "," << Epot << std::endl;
+
+        potentialEnergy();
+        kineticEnergy();
     }
 
-    void print()
+    void init(const std::string filename, const std::vector<Body>& bodies)
     {
-        for (auto& body : m_bodies)
+        m_pos.resize(bodies.size() * 3u);
+        m_vel.resize(bodies.size() * 3u);
+        m_acc.resize(bodies.size() * 3u);
+        for (size_t i{0u}; i < bodies.size(); ++i)
         {
-            for (size_t i{0U}; i < 3U; ++i)
-            {
-                body.file << body.position[i] << (i > 2U ? "\n" : "\t");
-                m_plotfile << body.position[i] << "\t";
-            }
-
-            m_rangeX[0] = std::min(m_rangeX[0], body.position[0]);
-            m_rangeX[1] = std::min(m_rangeX[1], body.position[0]);
-            m_rangeY[0] = std::min(m_rangeY[0], body.position[1]);
-            m_rangeY[1] = std::min(m_rangeY[1], body.position[1]);
+            m_pos[i * 3u] = bodies[i].position;
+            m_vel[i * 3u + 1u] = bodies[i].velocity;
         }
-        m_frames++;
-        m_plotfile << std::endl;
-    }
-
-    bool initialize(const std::string& filename)
-    {
-        std::ifstream file(filename, std::ios::in);
-        if (file.good())
-        {
-            uint32_t count{0U};
-            file >> count;
-            std::cout << "Number of bodies = " << count << std::endl;
-            m_bodies.resize(count);
-            for (uint32_t i{0U}; i < count; ++i)
-            {
-                file >> m_bodies[i].name;
-                file >> m_bodies[i].position[0];
-                file >> m_bodies[i].velocity[1];
-                file >> m_bodies[i].mass;
-                file >> m_bodies[i].radius;
-                std::cout << m_bodies[i].name << " d=" << m_bodies[i].position[0] << " v=" << m_bodies[i].velocity[1] << " m=" << m_bodies[i].mass << " r=" << m_bodies[i].radius << std::endl;
-                m_bodies[i].file.open(m_bodies[i].name + ".dat", std::ios::out | std::ios::trunc);
-            }
-            m_plotfile.open("Solarsystem.dat", std::ios::out | std::ios::trunc);
-            return true;
-        }
-        std::cout << "Invalid file " << filename.c_str() << std::endl;
-        return false;
+        m_ekin.resize(bodies.size());
+        m_epot.resize(bodies.size());
+        m_mass.resize(bodies.size());
+        
+        potentialEnergy();
+        kineticEnergy();
+        
+        m_output.open(filename, std::ios::out | std::ios::trunc);
     }
 
     void finish()
     {
-        for (auto& body : m_bodies)
-        {
-            body.file.close();
-        }
-        m_plotfile.close();
-        std::cout << "Range = [" << m_rangeX[0] << ":" << m_rangeX[1] << ", " << m_rangeY[0] << ":" << m_rangeY[1] << "]" << std::endl;
-        std::cout << "Frames = " << m_frames << std::endl;
+        m_output.close();
     }
 
 protected:
-    Vector derive(float_t x, Vector& y) final
+    Vector calculate(const Type x, const Vector& y)
     {
-        const size_t size = m_bodies.size() * 6U;
-        Vector dydx(size);
-
-        for (uint32_t a{0U}; a < size; a += 6U)
+        Vector acc(y.size() / 3u);
+        for (size_t i{0u}; i < y.size(); ++i)
         {
-            for (uint32_t k{0U}; k < 3; ++k)
+            for (size_t j{0u}; j < y.size(); ++j)
             {
-                // Position
-                dydx[a + k] = y[a + k + 3];
-                // Velocity
-                dydx[a + k + 3] = 0.F;
-            }
-
-            for (uint32_t b{0U}; b < size; b += 6)
-            {
-                if (a != b)
+                if (i != j)
                 {
-                    // Mass
-                    std::vector<Body>::iterator it = m_bodies.begin();
-                    it += (b / 6);
-                    float_t m = it->mass;
-                    // Distance
-                    float_t d{0.F};
-                    for (uint32_t k{0U}; k < 3; ++k)
+                    Type r3{0.0};
+                    Vector rx(y.size() / 3u);
+                    for (size_t k{0u}; k < 3; ++k)
                     {
-                        d += std::pow(y[a + k] - y[b + k], 2.F);
+                        rx[k] = y[i * 3u + k] - y[j * 3u + k];
+                        r3 += std::pow(rx[k] * rx[k], 1.5);
                     }
-                    d = std::sqrt(d);
-                    // Velocity
-                    for (uint32_t k{0U}; k < 3; ++k)
-                    {
-                        dydx[a + k + 3] += (y[b + k] - y[a + k]) * m / std::pow(d, 3.F);
-                    }
+
+                    acc += rx * (-PlanetSystem::G * m_mass[j]) / r3;
                 }
             }
         }
-        return dydx;
+        return acc;
     }
 
-    Vector getParams() const final
+    void kineticEnergy()
     {
-        Vector y(m_bodies.size() * 6U);
-
-        uint32_t i{0U};
-        for (auto& body : m_bodies)
+        for (size_t i{0u}; i < m_ekin.size(); ++i)
         {
-            // Position
-            y[i++] = body.position[0];
-            y[i++] = body.position[1];
-            y[i++] = body.position[2];
-
-            // Velocity
-            y[i++] = body.velocity[0];
-            y[i++] = body.velocity[1];
-            y[i++] = body.velocity[2];
+            Vector vel{m_vel[i*3u], m_vel[i*3u+1u], m_vel[i*3u+2u]};
+            m_ekin[i] = m_mass[i] * vel.norm(2u);
         }
-        return y;
     }
 
-    void setParams(const Vector& y) final
+    void potentialEnergy()
     {
-        if (y.size() == m_bodies.size() * 6U)
+        for (size_t i{0u}; i < m_mass.size(); ++i)
         {
-            uint32_t i{0U};
-            for (auto& body : m_bodies)
+            m_epot[i] = 0.0;
+            for (size_t j{0u}; j < m_mass.size(); ++i)
             {
-                // Position
-                body.position[0] += y[i++];
-                body.position[1] += y[i++];
-                body.position[2] += y[i++];
-
-                // Velocity
-                body.velocity[0] += y[i++];
-                body.velocity[1] += y[i++];
-                body.velocity[2] += y[i++];
+                if (i != j)
+                {
+                    Type r{0.0};
+                    Vector rx(3u);
+                    for (size_t k{0u}; k < 3; ++k)
+                    {
+                        rx[k] = m_pos[i * 3u + k] - m_pos[j * 3u + k];
+                        r += std::pow(rx[k] * rx[k], 0.5);
+                    }
+                    m_epot[i] += -PlanetSystem::G * m_mass[i] * m_mass[j] / r / 2.0;
+                }
             }
         }
     }
-    
+
 private:
-    std::vector<Body> m_bodies{};
-    RungeKutta m_solver{};
-    std::ofstream m_plotfile{};
-    size_t m_frames{0U};
-    float_t m_rangeX[2];
-    float_t m_rangeY[2];
+    Vector m_pos{};
+    Vector m_vel{};
+    Vector m_acc{};
+    Vector m_ekin{};
+    Vector m_epot{};
+    Vector m_mass{};
+    Solver m_solver{};
+    std::ofstream m_output{};
 };
 
 /**
@@ -221,27 +173,28 @@ public:
  */
 int main(int argc, char** argv)
 {
-    std::string filename{};
-    if (argc >= 2)
-    {
-        World world{};
-        if (world.initialize(argv[1]))
-        {
-            Console console{};
-            std::atomic<bool> run(true);
-            std::thread console_t(console, std::ref(run));
+    auto m_earth = 5.9742e24 / PlanetSystem::Sol; // Mass of earth in units of Sol
+    auto v_earth = 29783.0 / PlanetSystem::Au * PlanetSystem::Day; // Average orbital velocity of the earth in Au/Day
 
-            float_t t{0.F};
-            static constexpr float_t dt{0.001F};
-            while (run.load())
-            {
-                t += dt;
-                world.step(t, dt);
-            }
-            world.finish();
-            run.store(false);
-            console_t.join();
-        }
+    PlanetSystem planets{};
+    planets.init("result.csv", {
+        {"Sun", 0.0, 0.0, 1.0},
+        {"Earth", -1.0, v_earth, m_earth}
+    });
+
+    Console console{};
+    std::atomic<bool> run(true);
+    std::thread console_t(console, std::ref(run));
+
+    PlanetSystem::Type t{0.};
+    static constexpr PlanetSystem::Type dt{0.001};
+    while (run.load())
+    {
+        t += dt;
+        planets.step(t, dt);
     }
+    planets.finish();
+    run.store(false);
+    console_t.join();
     return 0;
 }

@@ -1,13 +1,13 @@
 # Ordinary Differential Equations Solver
 
 ![languages](https://img.shields.io/badge/languages-C++%20-blue)
-[![version](https://img.shields.io/badge/version-%200.2-blue)](https://github.com/smirko-dev/ode-solver/blob/main/CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-%200.3-blue)](https://github.com/smirko-dev/ode-solver/blob/main/CHANGELOG.md)
 [![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/smirko-dev/ode-solver/blob/main/LICENSE)
 [![Build Actions Status](https://github.com/smirko-dev/ode-solver/workflows/Build/badge.svg)](https://github.com/smirko-dev/ode-solver/actions)
 
 ## Description
 
-The [ode](ode) template library comes with two interface classes [ode::Function](ode/ode/Function.h) and [ode::Solver](ode/ode/Solver.h).
+The [ode](ode) template library comes with template spezializations for the [ode::Solver](ode/ode/Solver.h) for floating point types and the [ode::Vector](ode/ode/Vector.h) type.
 
 The following implementations are included:
 - [Runge Kutta](ode/RungeKutta.h)

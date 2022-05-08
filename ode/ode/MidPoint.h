@@ -4,39 +4,23 @@
 
 namespace ode
 {
-/**
- * @brief MidPoint class
- */
-template<typename T>
-class MidPoint : public Solver<T>
-{
-public:
-    MidPoint() = default;
-
-    Vector<T> calc(T x, T dx, Function<T>& function) final
+    /// @brief MidPoint solver class
+    template<typename T>
+    class MidPoint : public Solver<T>
     {
-        Vector<T> y{function.getParams()};
-        Vector<T> dy(y.size());
-        Vector<T> dydx{function.derive(x, y)};
+    public:
+        using V = typename Solver<T>::Type;
 
-        Vector<T> k1(y.size());
-        for (size_t i{0U}; i < y.size(); ++i)
+        MidPoint() = default;
+        [[nodiscard]] T operator()(const V x, const V dx, const T& y, Function<T, V> function)
         {
-            k1[i] = dx * dydx[i];
-        }
-        Vector<T> yt(y.size());
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            yt[i] = y[i] + k1[i] / 2.F;
-        }
+            T dydx{function(x, y)};
 
-        dydx = function.derive(x + dx / 2.F, yt);
-        for (size_t i{0U}; i < y.size(); ++i)
-        {
-            dy[i] = dx * dydx[i];
+            T k1 = dydx * dx;
+            T yt = y + k1 / V{2.};
+            dydx = function(x + dx / V{2.}, yt);
+
+            return y + dydx * dx;
         }
-        function.setParams(dy);
-        return dy;
-    }
-};
+    };
 }

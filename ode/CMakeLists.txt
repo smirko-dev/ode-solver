@@ -7,7 +7,6 @@ ADD_LIBRARY(ode INTERFACE)
 
 TARGET_SOURCES(ode INTERFACE
     ode/Vector.h
-    ode/Function.h
     ode/Solver.h
     ode/Euler.h
     ode/MidPoint.h
