@@ -5,7 +5,7 @@
 [ode](ode) is a header only library. Included are 
  - a [Vector](ode/Vector.h) template class for vector math
  - a [Function](ode/Solver.h) alias for derivative functions
- - a [Solver](oder/Solver.h) template class for type specialization
+ - a [Solver](ode/Solver.h) template class for type specialization
 
 Included ode solver implementations are
  - [Euler](oder/Euler.h)
