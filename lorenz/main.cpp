@@ -8,12 +8,12 @@ int main(int argc, char** argv)
 
     using Type = ode::Vector<float_t>;
 
-    Type y(1u);
+    Type y{1.F, 0.F, 0.F};
     ode::RungeKutta<Type> rk{};
 
     for (float_t t{0.0F}; t < 2'000.F; t += dt)
     {
-        y += rk(t, dt, y, [](float_t x, const Type& y) -> Type
+        y = rk(t, dt, y, [](float_t x, const Type& y) -> Type
         {
             static constexpr float_t a = 10.F;
             static constexpr float_t b = 28.F;
@@ -25,7 +25,7 @@ int main(int argc, char** argv)
             dydx[2u] = y[0u] * y[1u] - c * y[2u];
             return dydx * dt;
         });
-        std::cout << y[0u]<< "," << y[2u] << std::endl;
+        std::cout << y[0u] << "," << y[2u] << std::endl;
     }
 
     return 0;
