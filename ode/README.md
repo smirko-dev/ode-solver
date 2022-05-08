@@ -8,7 +8,7 @@
  - a [Solver](ode/Solver.h) template class for type specialization
 
 Included ode solver implementations are
- - [Euler](oder/Euler.h)
+ - [Euler](ode/Euler.h)
  - [Mid Point](ode/MidPoint.h)
  - [Runge Kutta](ode/RungeKutta.h)
  - [Velocity Verlet](ode/VelocityVerlet.h)
